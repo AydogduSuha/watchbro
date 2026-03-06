@@ -2,11 +2,30 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+	fmt.Println("Watchbro İzleme Servisi Başlatıldı...")
+
+	// 10 saniyede bir tetiklenecek bir zamanlayıcı oluştur
+	ticker := time.NewTicker(10 * time.Second)
+	defer ticker.Stop()
+
+	// Programı durdurana kadar döngüde kalsın
+	for range ticker.C {
+		fmt.Println("Ekran görüntüsü alınıyor...")
+		
+		err := CaptureScreen()
+		if err != nil {
+			fmt.Printf("Hata oluştu: %v\n", err)
+		} else {
+			fmt.Println("Görüntü başarıyla kaydedildi.")
+		}
+	}
+	
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
